@@ -1,0 +1,243 @@
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1A1A1A;
+}
+#title{
+    background-color: #0D0D0D;
+    width: 100%;
+    height: 200px;
+    display: flex;
+    gap:12px;
+    align-items: center;
+    justify-content: center;
+}
+#title-text{
+    gap:0;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#title-text img{
+    width: 22px;
+    height: 36px;
+}
+#to{
+    color: #4EA8DE;
+}
+#do{
+    color: #5E60CE;
+}
+#input-container{
+    position: absolute;
+    top: 173px;
+    display: flex;
+    align-items: center;
+    gap:8px;
+    z-index: 1;
+}
+#input{
+    width: 638px;
+    height: 54px;
+    padding:16px;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #262626;
+    border: 1px solid #0D0D0D;
+    color: #F2F2F2;
+}
+#input::placeholder{
+    color: #808080;
+}
+#create{
+    width: 90px;
+    height: 52px;
+    font-size :14px;
+    background-color: #1E6F9F;
+    padding: 16px;
+    border-radius: 8px;
+    border:none;
+    color: #F2F2F2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+#status-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 736px;
+    height: 287px;
+    gap: 24px;
+    position: absolute;
+    top: 291px;
+    z-index: 0;
+}
+#all{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 736px;
+    height: 19px;
+}
+#TarefasCriadas, #Concluídas{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+#TarefasCriadas{
+    color: #4EA8DE;
+}
+#Concluídas{
+    color: #8284FA;
+}
+#TarefasCriadas div, #Concluídas div{
+    width: 25px;
+    height: 19px;
+    background-color: #333333;
+    color: #D9D9D9;
+    padding: 2px 8px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#container{
+    padding: 64px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #808080;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top: 1px solid #333333;
+    gap:16px;
+    position: relative;
+}
+.todo-none{
+    width: 56px;
+    height: 56px;
+}
+#container div, #container ul{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+#container ul{
+    gap: 12px;
+    position: absolute;
+    top: 0;
+}
+li{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 72px;
+    padding: 16px;
+    background-color: #262626;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    text-align: left;
+    gap:12px;
+}
+li button{
+    width: 24px;
+    height: 22px;
+    border-radius: 50px;
+    border: 3px solid #4EA8DE;
+    background-color: none;
+    cursor: pointer;
+    background-color: white;
+}
+li p{
+    width: 100%;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+#delete {
+    right: 16px;
+    width: 24px; /* 원하는 너비로 설정 */
+    height: 24px; /* 높이도 조정 */
+    display: flex;
+    align-items:flex-end;
+    justify-content: center;
+    background-color: yellow;
+}
+#delete img{
+    width: 12px;
+    height: 14px;
+    cursor: pointer;
+    background-color: red;
+    max-width: 100%; max-height: 100%;
+}
+#delete img:active, #create:active{
+    filter: brightness(0.6);
+}
+#create-container{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top:0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+#create-form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    padding: 32px;
+    width: 30%;
+    height: 60%;
+    gap: 8px;
+    border-radius: 8px;
+}
+#create-input{
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #333333;
+    color: #333333;
+}
+#create-value{
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #333333;
+    color: #333333;
+}
+#cancel, #add{
+    width: 100px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    color: #333333;
+    cursor: pointer;
+}
+#create-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+}

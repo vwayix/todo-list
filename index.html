@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header id="title">
+        <img src="./img/Layer 2.png" alt="Logo" />
+        <div id="title-text">
+            <h4 id="to">to</h4>
+            <h4 id="do">do</h4>
+        </div>
+    </header>
+
+    <div id="input-container">
+        <input id="input" type="text" placeholder="새 작업 추가" />
+        <button id="create">
+            <strong>추가</strong>
+            <img src="./img/Plus.png" alt="Plus" />
+        </button>
+    </div>
+    <div id="create-container">
+    <form id="create-form">
+        <h3>새 작업 추가</h3>
+        <input id="create-input" type="text" placeholder="제목을 입력해주세요" />
+        <input id="create-value" type="text" placeholder="내용을 입력해주세요" />
+        <div id="create-buttons">
+        <button id="cancel" type="reset">Cancel</button>
+        <button id="add" type="submit">Add</button>
+        </div>
+    </form>
+    </div>
+    <div id="status-container">
+        <div id="all">
+            <div id="TarefasCriadas">
+                <strong>생성된 작업</strong>
+                <div id="count">0</div>
+            </div>
+            <div id="Concluídas">
+                <strong>완료된 작업</strong>
+                <div>0</div>
+            </div>
+        </div>
+
+        <div id="container">
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
+
+<!--
+        <div id="container">
+            <img id="todo-none" src="./img/Clipboard.png" alt="Clipboard" />
+            <div>
+            <strong>아직 등록된 작업이 없습니다.</strong>
+            <p>작업을 생성하고 할 일 항목을 정리하세요</p>
+            </div>
+        </div>
+-->
+
+<!--
+        <ul>
+                    <li>
+                        <button class="check"></button>
+                        <p>Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer.</p>
+                        <button class="delete">
+                            <img src="./img/delete.png" alt="Trash" />
+                        </button>
+                    </li>
+                </ul>
+-->
