@@ -1,105 +1,82 @@
-function open(){
-  const createContainer = document.getElementById('create-container');
-  createContainer.style.display = 'flex';
-  createContainer.style.zIndex = '1';
-  const title = document.getElementById('create-input');
-  const value = document.getElementById('create-value');
-  title.value = '';
-  value.value = '';
-}
-function close(){
-  const createContainer = document.getElementById('create-container');
-  createContainer.style.display = 'none';
-  createContainer.style.zIndex = '0';
-}
-function save(todos){
-  localStorage.setItem('todos', JSON.stringify(todos));
-}
-function handleAdd(event){
-  event.preventDefault();
-  const title = document.getElementById('create-input').value;
-  const value = document.getElementById('create-value').value;
-  const todos = JSON.parse(localStorage.getItem('todos')) || [];
-  if(title === '' || value === ''){
-    alert('제목 또는 내용을 입력해주세요');
+import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+const supabaseUrl = "https://mlbuusohdsxbivcnqbun.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sYnV1c29oZHN4Yml2Y25xYnVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0MzYyOTksImV4cCI6MjA1NTAxMjI5OX0.E8PNo5FuGCg4Zdj86O01IdABTVLdD94kxsxZfBWe0NQ";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+async function refreshHistory() {
+  let { data: page, error } = await supabase.from('page').select('*');
+  if (error) {
+    console.error('Error fetching data:', error);
     return;
-  }else{
-    const todo = {
-      title: title,
-      value: value,
-    };
-  todos.push(todo);
-  save(todos);
   }
-  close();
-  reRender();
+  console.log(page);
+  let tag = '';
+  for (let i = 0; i < page.length; i++) {
+    tag += `<li>
+    <input type="checkbox" id="${page[i].id}" class="check"/>
+    ${page[i].title}
+    <svg id="delete" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+    </svg>
+    </li>`;
+  }
+  document.getElementById('container').innerHTML = tag;
+  document.getElementById("count").innerText = page.length;
+  
+  // 체크박스 이벤트 리스너 추가
+  document.querySelectorAll('.check').forEach(check => check.addEventListener('change', chackHandler));
+  document.querySelectorAll('#delete').forEach(btn => btn.addEventListener('mouseup', deleteHandler));
 }
-function handleDelete(event){
-  const todos = JSON.parse(localStorage.getItem('todos')) || [];
-  const target = event.target;
-  const parent = target.closest('li'); // li 요소를 찾음
-  const index = Array.from(parent.parentElement.children).indexOf(parent);
-  todos.splice(index, 1);
-  save(todos);
-  reRender();
+refreshHistory();
+async function recordHandler() {
+  const title = document.getElementById('input').value;
+  const trimmedTitle = title.trim();
+  if (trimmedTitle === '') {
+    alert('내용을 입력해주세요.');
+    return;
+  } else {
+    const { data, error } = await supabase
+    .from('page')
+    .insert([{ title: title }])
+    .select();
+    refreshHistory();
+  if (error) {
+    console.error('Error inserting data:', error);
   }
-
-function reRender(){
-  const todos = JSON.parse(localStorage.getItem('todos')) || [];
-  const container = document.getElementById('container');
-  const count = document.getElementById('count');
-  if(todos.length === 0){
-    console.log('작업이 없습니다.');
-    count.innerText = 0;
-    const div = document.createElement('div');
-    const img = document.createElement('img');
-    const strong = document.createElement('strong');
-    const text = document.createElement('p');
-    img.classList.add('todo-none');
-    img.src = './img/Clipboard.png';
-    strong.innerText = '아직 등록된 작업이 없습니다.';
-    text.innerText = '작업을 생성하고 할 일 항목을 정리하세요';
-    container.appendChild(img);
-    div.appendChild(strong);
-    div.appendChild(text);
-    container.appendChild(div);
-  }else if(todos.length > 0){
-    console.log('작업이 있습니다.');
-    count.innerText = todos.length;
-    container.innerHTML = '';
-    const ul = document.createElement('ul');
-    todos.forEach((todo) => {
-      const li = document.createElement('li');
-      const checkBtn = document.createElement('button');
-      const p = document.createElement('p');
-      const deleteBtn = document.createElement('button');
-      const img = document.createElement('img');
-      const count = document.getElementById('count');
-      count.innerText = todos.length;
-      checkBtn.classList.add('check');
-      p.innerText = todo.value;
-      deleteBtn.classList.add('delete');
-      img.src = './img/delete.png';
-      
-      li.appendChild(checkBtn);
-      li.appendChild(p);
-      deleteBtn.appendChild(img);
-      li.appendChild(deleteBtn);
-      ul.appendChild(li);
-    }) 
-  container.appendChild(ul);
-  }//작업이 있을 때
+  }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const createBtn = document.getElementById('create');
-  const cancelBtn = document.getElementById('cancel');
-  const addBtn = document.getElementById('add');
-  const deleltBtnAll = document.querySelectorAll('.delete');
+async function deleteHandler() {
+  let result = confirm("진짜 삭제하시겠습니까?");
+  if (result) {
+    const listItem = this.closest('li');
+    const id = listItem.querySelector('.check').id;
+    const { error } = await supabase.from('page').delete().match({ id: id });
+    if (error) {
+      console.error('Error deleting data:', error);
+      return;
+    }
+    refreshHistory();
+  } else {
+    return;
+  }
+}
 
-  reRender();
-  createBtn.addEventListener('click', () => open());
-  cancelBtn.addEventListener('click', () => close());
-  addBtn.addEventListener('click', (event) => handleAdd(event));
-  deleltBtnAll.forEach((btn) => btn.addEventListener('click', handleDelete()));
-});
+async function chackHandler(event) {
+  const complete = document.getElementById('complete');
+  const checkbox = event.target;
+  const listItem = checkbox.closest('li');
+  let ChackNumber = parseInt(complete.innerText);
+
+  if (checkbox.checked) {
+    listItem.style.textDecoration = 'line-through';
+    complete.innerText = ChackNumber + 1;
+    console.log('check'); 
+  } else {
+    listItem.style.textDecoration = 'none';
+    complete.innerText = ChackNumber - 1;
+    console.log('check no');
+  }
+}
+
+document.getElementById('input-container').addEventListener('submit', recordHandler);
