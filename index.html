@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header id="title">
+        <img src="./img/Layer 2.png" alt="Logo" />
+        <div id="title-text">
+            <h4 id="to">to</h4>
+            <h4 id="do">do</h4>
+        </div>
+    </header>
+
+    <form id="input-container" autocomplete="off">
+        <input id="input" type="text" placeholder="새 작업 추가" />
+        <button id="create" type="submit">
+            <strong>추가</strong>
+            <img src="./img/Plus.png" alt="Plus" />
+        </button>
+    </form>
+    <div id="status-container">
+        <div id="all">
+            <div id="TarefasCriadas">
+                <strong>생성된 작업</strong>
+                <div id="count"></div>
+            </div>
+            <div id="Concluídas">
+                <strong>완료된 작업</strong>
+                <div id="complete"></div>
+            </div>
+        </div>
+
+        <div id="container">
+        </div>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
