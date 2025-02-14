@@ -4,45 +4,58 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function refreshHistory() {
-  let { data: page, error } = await supabase.from('page').select('*');
-  if (error) {
-    console.error('Error fetching data:', error);
+  let { data: page, Error } = await supabase.from('page').select('*');
+  if (Error) {
+    console.error('Error fetching data:', Error);
     return;
   }
-  console.log(page);
-  let tag = '';
+  let incompleteTasks = '';
+  let completedTasks = '';
+  let CreatedTask = page.length;
+  let CompletedTask = 0;
   for (let i = 0; i < page.length; i++) {
-    tag += `<li>
-    <input type="checkbox" id="${page[i].id}" class="check"/>
+    const completed = page[i].completed; //체크
+    const checked = completed ? 'checked' : ''; //체크활성화?
+    const textDecoration = completed ? 'line-through' : 'none'; //줄긋기
+
+    const taskHTML = `<li style="text-decoration: ${textDecoration}">
+    <input type="checkbox" id="${page[i].id}" class="check" ${checked}/>
     ${page[i].title}
     <svg id="delete" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
     </svg>
     </li>`;
+    if (completed) {
+      completedTasks += taskHTML;
+      CompletedTask++;
+    } else {
+      incompleteTasks += taskHTML;
+    }
   }
-  document.getElementById('container').innerHTML = tag;
-  document.getElementById("count").innerText = page.length;
-  
-  // 체크박스 이벤트 리스너 추가
+  document.getElementById('container').innerHTML = incompleteTasks + completedTasks;
+  document.getElementById('count').innerText = CreatedTask;
+  document.getElementById('complete').innerText = CompletedTask;
   document.querySelectorAll('.check').forEach(check => check.addEventListener('change', chackHandler));
   document.querySelectorAll('#delete').forEach(btn => btn.addEventListener('mouseup', deleteHandler));
 }
 refreshHistory();
+
 async function recordHandler() {
-  const title = document.getElementById('input').value;
-  const trimmedTitle = title.trim();
-  if (trimmedTitle === '') {
+  const title = document.getElementById('input').value.trim();
+
+  if (title === '') {
     alert('내용을 입력해주세요.');
     return;
   } else {
     const { data, error } = await supabase
-    .from('page')
-    .insert([{ title: title }])
-    .select();
+      .from('page')
+      .insert([{ title: title, completed: false }]) //that
+      .select();
+    if (error) {
+      console.error('Error inserting data:', error);
+      return;
+    }
     refreshHistory();
-  if (error) {
-    console.error('Error inserting data:', error);
-  }
   }
 }
 
@@ -62,20 +75,39 @@ async function deleteHandler() {
   }
 }
 
+
 async function chackHandler(event) {
-  const complete = document.getElementById('complete');
+  const completeElement = document.getElementById('complete');
+  const complete = parseInt(completeElement.innerText);
   const checkbox = event.target;
   const listItem = checkbox.closest('li');
-  let ChackNumber = parseInt(complete.innerText);
+  const id = checkbox.id;
 
-  if (checkbox.checked) {
-    listItem.style.textDecoration = 'line-through';
-    complete.innerText = ChackNumber + 1;
-    console.log('check'); 
-  } else {
+  let { data: page, error } = await supabase
+  .from('page')
+  .select('*').eq("id", id)
+  const completed = page[0].completed;
+  console.log(completed)
+
+  if (completed){
+    completeElement.innerText = complete - 1;
     listItem.style.textDecoration = 'none';
-    complete.innerText = ChackNumber - 1;
+    console.log('check'); 
+    const { data, error } = await supabase
+    .from('page')
+    .update({ completed: false})
+    .eq('id', id)
+    .select()
+
+  } else {
+    completeElement.innerText = complete + 1;
+    listItem.style.textDecoration = 'line-through';
     console.log('check no');
+    const { data, error } = await supabase
+    .from('page')
+    .update({ completed: true})
+    .eq('id', id)
+    .select()
   }
 }
 
